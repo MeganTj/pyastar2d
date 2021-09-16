@@ -60,13 +60,11 @@ static Node *complete_path(const float* weights, Node *closestNode, int w, int h
      for (int i = 0; i < 4; i++) {
         if (nbrs[i] >= 0) {
           // The maximum value on the path
-          // std::cout << "Before " << cur->g << " " << cur->max_g_idx << std::endl;
           if (weights[nbrs[i]] > cur->g) {
             cur->max_g_idx = nbrs[i];
             cur->g = std::max(cur->g, weights[nbrs[i]]);
           }
           cur->idx = nbrs[i];
-          // std::cout <<"After " << cur->g << " " << cur->max_g_idx << std::endl;
           break;
         }
       }
@@ -177,6 +175,7 @@ static PyObject *astar_trials(PyObject *self, PyObject *args) {
   // points. Finds the optimal path between each start and end
   const PyArrayObject* weights_object;
   const PyArrayObject* dist_weights_object;
+  int num_weights;
   int h;
   int w;
   int start;
@@ -184,9 +183,9 @@ static PyObject *astar_trials(PyObject *self, PyObject *args) {
   int diag_ok;
 
   if (!PyArg_ParseTuple(
-        args, "OOiiiii", // i = int, O = object
+        args, "OOiiiiii", // i = int, O = object
         &weights_object, &dist_weights_object,
-        &h, &w,
+        &num_weights, &h, &w,
         &start, &goal,
         &diag_ok))
     return NULL;
@@ -197,7 +196,7 @@ static PyObject *astar_trials(PyObject *self, PyObject *args) {
   std::vector<int> g_idxs;
 
   // Assume there are three weights to try
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < num_weights; i++) {
     g_idxs.push_back(astar(weights, *(dist_weights + i), h, w, start, goal, diag_ok));
   }
   
