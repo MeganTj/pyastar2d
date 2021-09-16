@@ -14,8 +14,13 @@ class build_ext(_build_ext):
         self.include_dirs.append(numpy.get_include())
 
 
+# astar_module = Extension(
+#     'pyastar2d.astar', sources=['src/cpp/astar.cpp'],
+#     extra_compile_args=["-O3", "-Wall", "-shared", "-fpic"],
+# )
+
 astar_module = Extension(
-    'pyastar2d.astar', sources=['src/cpp/astar.cpp'],
+    'pyastar2d.astar', sources=['src/cpp/astar_mod.cpp'],
     extra_compile_args=["-O3", "-Wall", "-shared", "-fpic"],
 )
 
